@@ -40,7 +40,7 @@ int				request_cd(t_client *client)
 	ft_strdel(&client->old);
 	client->old = client->pwd;
 	if (*(client->pwd) != 0)
-		asprintf(&dest, "%s/%s", client->pwd, dest);
+		ft_asprintf(&dest, "%s/%s", client->pwd, dest);
 	else
 		dest = ft_strdup(dest);
 	client->pwd = dest;
@@ -49,15 +49,12 @@ int				request_cd(t_client *client)
 
 int				request_pwd(t_client *client)
 {
-	char*		path;
 	t_env*		env;
-	int			size;
 	char*		format;
 
 	env = singleton();
 	format = (*client->pwd == 0) ? "%s%s\n" : "%s/%s\n";
-	size = asprintf(&path, format, env->server.path, client->pwd);
-	send(client->sock, path, size, 0);
+	ft_fprintf(client->sock, format, env->server.path, client->pwd);
 	return (SUCCESS);
 }
 

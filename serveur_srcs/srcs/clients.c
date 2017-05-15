@@ -34,7 +34,7 @@ static int		clients_request_set(t_client *c, char *cmd)
 	res = cmd;
 	while ((res = ft_strchr(res, '\t')))
 		*res = ' ';
-	asprintf(&res, "%s %s", cmd, c->pwd);
+	ft_asprintf(&res, "%s %s", cmd, c->pwd);
 	r->args = ft_strsplit(res, ' ');
 	ft_strdel(&res);
 	if (!r->args)
@@ -98,7 +98,7 @@ int				clients(t_env *env)
 	t_client	*client;
 
 	client = &env->client;
-	asprintf(&client->name, "Guest %d", env->nbrclients);
+	ft_asprintf(&client->name, "Guest %d", env->nbrclients);
 	clients_handle(env, &env->client);
 	return (SUCCESS);
 }
