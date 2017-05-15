@@ -10,6 +10,10 @@
 # include <netdb.h>
 # include <signal.h>
 # include <sys/wait.h>
+# include <dirent.h>
+
+// A virer
+#include <stdio.h>
 
 # include "libft.h"
 # include "ft_printf.h"
@@ -17,14 +21,15 @@
 # include "ft_time.h"
 
 # define STATE(env, msg)	display(env, ERROR, SERVER, msg)
+# define PROMPT				"~>"
 
-// Enum error
+/*
+**	Enums
+*/
 
-typedef enum				e_server_enum
+typedef enum				e_enum_server_error
 {
 	NOERROR = SUCCESS,
-	SERVER,
-	CLIENT,
 	SOCKET,
 	BIND,
 	LISTEN,
@@ -34,40 +39,43 @@ typedef enum				e_server_enum
 	IPV,
 	LIMIT,
 	FORK,
-	WARNING
-}							t_server_enum;
+	RECV,
+	SEND,
+	CMD
+}							t_enum_server_error;
 
-typedef enum				e_server_debug
+typedef enum				e_enum_server_other
+{
+	SERVER,
+	CLIENT,
+	WARNING,
+}							t_enum_server_other;
+
+typedef enum				e_enum_server_debug
 {
 	DEBUG_ALL = 6,
 	DEBUG_CLIENT = 2,
 	DEBUG_SERVER = 4
-}							t_server_debug;
+}							t_enum_server_debug;
 
-// Struct
-
-typedef struct				s_server
+typedef enum				e_enum_server_access
 {
-	int						port;
-	int						sock;
-	int						domain;
-	int						date;
-	int						limit;
-	char*					name;
-	struct protoent			*protocol;
-	struct sockaddr_in		sin;
-}							t_server;
+	ROOT = 0,
+	USER,
+	GUEST
+}							t_enum_server_access;
 
-typedef struct				s_client
+/*
+**	Structs
+*/
+
+typedef struct				s_request
 {
-	int						pid;
-	int						port;
-	int						sock;
-	int						date;
-	unsigned int			len;
-	char*					name;
-	struct sockaddr_in		csin;
-}							t_client;
+	char*					request;
+	char*					cmd;
+	char**					args;
+	int						nb;
+}							t_request;
 
 typedef struct				s_option
 {
@@ -78,6 +86,35 @@ typedef struct				s_option
 	char*					name;
 }							t_option;
 
+typedef struct				s_server
+{
+	int						port;
+	int						sock;
+	int						domain;
+	int						date;
+	int						limit;
+	char*					name;
+	char*					path;
+	struct protoent			*protocol;
+	struct sockaddr_in		sin;
+}							t_server;
+
+typedef struct				s_client
+{
+	int						pid;
+	int						port;
+	int						sock;
+	int						date;
+	int						access;
+	unsigned int			len;
+	char*					name;
+	char*					pwd;
+	char*					old;
+	char*					path;
+	t_request				request;
+	struct sockaddr_in		csin;
+}							t_client;
+
 typedef struct				s_env
 {
 	t_server				server;
@@ -85,12 +122,29 @@ typedef struct				s_env
 	int						connexion;
 	int						quit;
 	int						nbrclients;
-	int						ret;
+	int						error;
 }							t_env;
 
-// Fonctions
+typedef struct				s_server_cmd
+{
+	char*					key;
+	char*					cmd;
+	int						(*function)(t_client *);
+}							t_server_cmd;
 
+/*
+**	Fonctions
+*/
+
+t_env*						singleton(void);
+int							request_put(t_client *client);
+int							request_cd(t_client *client);
+int							request_pwd(t_client *client);
+int							request_quit(t_client *client);
+int							request(t_client *client);
 int							debug(t_env *env, int what);
+int							signals(void);
+int							errors(t_env *env);
 int							parser(t_env *env, int ac, char **av);
 int							server(t_env *env);
 int							clients(t_env *env);

@@ -9,18 +9,6 @@ static int		parser_usage(char *name)
 	exit(FAIL);
 }
 
-static int		parser_default(t_server *server, char **av)
-{
-	server->name = ft_strdup(av[0]);
-	server->domain = PF_INET;
-	server->sock = -1;
-	server->limit = 5;
-	server->sin.sin_addr.s_addr = htonl(INADDR_ANY);
-	server->sin.sin_port = 0;
-	server->date = TIMESTAMP;
-	return (SUCCESS);
-}
-
 static int		parser_optional(t_option *option, int ac, char **av)
 {
 	option->error = 0;
@@ -69,7 +57,6 @@ int				parser(t_env *env, int ac, char **av)
 	if (ac < 2)
 		parser_usage(av[0]);
 	server = &env->server;
-	parser_default(server, av);
 	parser_optional(&option, ac, av);
 	parser_setting(server, &option);
 	STATE(env, "CREATED!");

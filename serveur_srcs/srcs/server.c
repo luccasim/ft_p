@@ -1,12 +1,5 @@
 #include "serveur.h"
 
-static int		server_close(t_env *env)
-{
-	display(env, ERROR, SERVER, "CLOSED!");
-	close(env->server.sock);
-	return (SUCCESS);
-}
-
 static int		server_connexions(t_env *env, t_server *server)
 {
 	char			*blockmsg;
@@ -14,10 +7,10 @@ static int		server_connexions(t_env *env, t_server *server)
 
 	if (env->connexion >= server->limit)
 	{
-		blockmsg = "CLIENTS LIMIT REACHED, SERVER WILL BLOCK NEW CLIENTS...";
-		unblockmsg = "RESOURCES RELEASES, SERVER WILL ACCEPT NEW CLIENTS!";
+		blockmsg = "SERVER WILL BLOCK NEW CLIENTS.";
+		unblockmsg = "SERVER WILL ACCEPT NEW CLIENTS!";
 		display(env, WARNING, SERVER, blockmsg);
-		wait4(-1, 0, WNOHANG, 0);
+		wait4(-1, 0, 0, 0);
 		display(env, WARNING, SERVER, unblockmsg);
 	}
 	return (SUCCESS);
@@ -27,14 +20,13 @@ static int		server_client(t_env *env, t_server *server, t_client *client)
 {
 	int					pid;
 
-	env->quit = FAIL;
 	while (env->quit)
 	{
 		if ((client->sock = accept(server->sock, 
 			(struct sockaddr *)&client->csin, &client->len)) == FAIL)
 			return (THROW(ACCEPT));
-		env->connexion++;
-		env->nbrclients++;
+		++env->connexion;
+		++env->nbrclients;
 		if ((pid = fork()) == FAIL)
 		{
 			client->name = inet_ntoa(client->csin.sin_addr);
@@ -66,6 +58,7 @@ int				server(t_env *env)
 		return (THROW(LISTEN));
 	STATE(env, "RUNNING!");
 	server_client(env, server, &env->client);
-	server_close(env);
+	close(env->server.sock);
+	STATE(env, "CLOSED!");
 	return (SUCCESS);
 }
