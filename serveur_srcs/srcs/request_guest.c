@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   request_guest.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 17:07:33 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 17:07:35 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "serveur.h"
 
 int				request_cd(t_client *client)
 {
-	char*	dest;
-	DIR*	dir;
+	char		*dest;
+	DIR			*dir;
 
 	if (ft_strequ("cd", client->request.request))
 	{
@@ -25,8 +37,8 @@ int				request_cd(t_client *client)
 
 int				request_pwd(t_client *client)
 {
-	t_env*		env;
-	char*		format;
+	t_env		*env;
+	char		*format;
 
 	env = singleton();
 	format = (client->pwd[0] == 0) ? "%s%s\n" : "%s/%s\n";
@@ -36,7 +48,7 @@ int				request_pwd(t_client *client)
 
 int				request_quit(t_client *client)
 {
-	t_env	*env;
+	t_env		*env;
 
 	env = singleton();
 	display(env, SUCCESS, CLIENT, "DISCONNECTED!");

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   request.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 17:08:22 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 17:08:24 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "serveur.h"
 
 static t_server_cmd		g_server_cmd[] =
@@ -25,10 +37,10 @@ int				request_access(t_client *c, char *cmd, int access)
 
 int				request_cmd(t_client *c)
 {
-	t_env*		env;
-	char*		m;
-	char*		u;
-	char*		g;
+	t_env		*env;
+	char		*m;
+	char		*u;
+	char		*g;
 
 	env = singleton();
 	m = "{d:1}Master: %s{e}\n";
@@ -46,8 +58,8 @@ int				request_cmd(t_client *c)
 
 static int		request_set(t_client *c, char *cmd)
 {
-	char*		res;
-	t_request*	r;
+	char		*res;
+	t_request	*r;
 
 	r = &c->request;
 	r->request = 0;
@@ -70,14 +82,14 @@ static int		request_set(t_client *c, char *cmd)
 static int		request_state(int state, char *str)
 {
 	char		cmd[SIZE + 1];
-	t_env*		env;
-	t_client*	c;
+	t_env		*env;
+	t_client	*c;
 
 	env = singleton();
 	c = &env->client;
 	ft_snprintf(cmd, SIZE, "Command: '%s'", str);
 	display(env, state, CLIENT, cmd);
-	if (state == FAIL)	
+	if (state == FAIL)
 		request_cmd(&env->client);
 	ft_strdel(&str);
 	return (SUCCESS);
@@ -86,7 +98,7 @@ static int		request_state(int state, char *str)
 int				request(t_client *c, char *str)
 {
 	int			i;
-	char*		key;
+	char		*key;
 
 	i = 0;
 	key = 0;

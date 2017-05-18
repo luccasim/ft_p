@@ -13,10 +13,10 @@
 #include "ft_printf_struct.h"
 #include <stdlib.h>
 
-static char*	alloc_str(char *dst)
+static char		*alloc_str(char *dst)
 {
-	char*	new;
-	int		k;
+	char		*new;
+	int			k;
 
 	k = 0;
 	if (!dst)

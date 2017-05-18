@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   debug.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 16:46:58 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 16:47:24 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "client.h"
 
 static int	debug_client(t_client *c)
@@ -5,8 +17,8 @@ static int	debug_client(t_client *c)
 	ft_printf("{c:1:%s}\n", "Client struct:");
 	ft_printf("{c}%-10s%s{e}\n", "NAME:", c->name);
 	ft_printf("{c}%-10s%s{e}\n", "ADDR:", c->addr);
-	ft_printf("{c}%-10s%d{e}\n", "ACCESS:", c->access);	
-	ft_printf("{c}%-10s%d{e}\n", "SOCK:", c->sock);	
+	ft_printf("{c}%-10s%d{e}\n", "ACCESS:", c->access);
+	ft_printf("{c}%-10s%d{e}\n", "SOCK:", c->sock);
 	ft_printf("{c}%-10s%hu{e}\n", "PORT:", ntohs(c->sin.sin_port));
 	if (c->proto)
 		ft_printf("{c}%-10s%s{e}\n", "PROTO:", c->proto->p_name);
@@ -26,7 +38,7 @@ static int	debug_login(t_login *l)
 	return (SUCCESS);
 }
 
-int		debug(int act)
+int			debug(int act)
 {
 	t_env	*env;
 

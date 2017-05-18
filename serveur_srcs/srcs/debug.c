@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   debug.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 17:07:51 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 17:07:53 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "serveur.h"
 
 static int	debug_server(t_server *server)
 {
-	char*	domain;
+	char	*domain;
 
 	domain = (server->domain == PF_INET6) ? "IPv6" : "IPv4";
 	ft_printf("{y:1:%s}\n", "Server infos:");
@@ -32,7 +44,7 @@ static int	debug_client(t_client *client)
 	return (SUCCESS);
 }
 
-int		debug(t_env *env, int what)
+int			debug(t_env *env, int what)
 {
 	ft_printf("{r:1:%s}\n", "Debug infos:");
 	if (what & DEBUG_SERVER)

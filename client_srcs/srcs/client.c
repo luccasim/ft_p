@@ -1,12 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 16:45:52 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 16:46:04 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "client.h"
 
 static int		client_recv(t_client *c)
 {
 	char		buf[4095];
 	int			ret;
-	// int			prompt;
 
-	// ret = recv(c->sock, buf, 4096, 0);
 	ret = 1;
 	while (ret)
 	{
@@ -14,8 +24,6 @@ static int		client_recv(t_client *c)
 		if (ret <= 1)
 			return (FAIL);
 		buf[ret] = 0;
-		// if (ft_strchr(buf, "~>"))
-			// return (SUCCESS);
 		write(0, buf, ret);
 		return (SUCCESS);
 	}
@@ -24,7 +32,7 @@ static int		client_recv(t_client *c)
 
 static int		client_send(t_client *c)
 {
-	char*		line;
+	char		*line;
 	int			ret;
 
 	line = 0;
@@ -58,14 +66,14 @@ static int		client_authentification(t_env *env, t_client *c)
 
 int				client(t_env *env)
 {
-	t_client 	*c;
-	t_server 	*s;
+	t_client	*c;
+	t_server	*s;
 
 	c = &env->client;
 	s = &env->server;
 	if ((c->sock = socket(PF_INET, SOCK_STREAM, c->proto->p_proto)) == FAIL)
 		return (THROW(SOCK));
-	if ((connect(c->sock, (const struct sockaddr *)&c->sin, 
+	if ((connect(c->sock, (const struct sockaddr *)&c->sin,
 		sizeof(c->sin))) == FAIL)
 		return (THROW(CONNECT));
 	client_authentification(env, c);

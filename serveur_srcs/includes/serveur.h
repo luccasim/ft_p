@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   serveur.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 17:43:00 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 17:43:02 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SERVEUR_H
 # define SERVEUR_H
 
@@ -83,9 +95,9 @@ typedef struct				s_login
 
 typedef struct				s_request
 {
-	char*					request;
-	char*					cmd;
-	char**					args;
+	char					*request;
+	char					*cmd;
+	char					**args;
 	int						nb;
 }							t_request;
 
@@ -95,7 +107,7 @@ typedef struct				s_option
 	int						ipv;
 	int						limit;
 	int						error;
-	char*					name;
+	char					*name;
 }							t_option;
 
 typedef struct				s_server
@@ -105,8 +117,8 @@ typedef struct				s_server
 	int						domain;
 	int						date;
 	int						limit;
-	char*					name;
-	char*					path;
+	char					name[SIZE];
+	char					pat[SIZE];
 	struct protoent			*protocol;
 	struct sockaddr_in		sin;
 }							t_server;
@@ -138,8 +150,8 @@ typedef struct				s_env
 
 typedef struct				s_server_cmd
 {
-	char*					key;
-	char*					cmd;
+	char					*key;
+	char					*cmd;
 	int						(*function)(t_client *);
 }							t_server_cmd;
 
@@ -147,7 +159,7 @@ typedef struct				s_server_cmd
 **	Fonctions
 */
 
-t_env*						singleton(void);
+t_env						*singleton(void);
 int							debug(t_env *env, int what);
 int							signals(void);
 int							errors(t_env *env);
@@ -164,6 +176,6 @@ int							request_pwd(t_client *client);
 int							request_lpwd(t_client *client);
 int							request_quit(t_client *client);
 int							request_system(t_client *client);
-int							request_access(t_client *c, char* cmd, int access);
+int							request_access(t_client *c, char *cmd, int access);
 
 #endif

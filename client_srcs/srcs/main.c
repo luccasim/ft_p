@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 16:54:53 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 16:55:04 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "client.h"
 
 static int		set_env(t_env *env, char **av)
@@ -34,6 +46,5 @@ int				main(int ac, char **av)
 	parser(env, ac, av);
 	client(env);
 	errors(env);
-	// debug(LOGIN | CLIENT);
 	return (env->error);
 }

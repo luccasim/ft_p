@@ -1,14 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   request_user.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 17:08:34 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 17:08:35 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "serveur.h"
 
 static int		request_fileexist(t_client *c, char *path, char *file)
 {
-	DIR*			dir;
+	DIR				*dir;
 	struct dirent	*dp;
 
 	if ((dir = opendir(path)) == 0)
 		return (FAIL);
 	while ((dp = readdir(dir)) != 0)
-	{
 		if (ft_strequ(dp->d_name, file))
 		{
 			closedir(dir);
@@ -20,7 +31,6 @@ static int		request_fileexist(t_client *c, char *path, char *file)
 				return (FAIL);
 			}
 		}
-	}
 	ft_fprintf(c->sock, "{y:1:%s}\n", "File not found!");
 	closedir(dir);
 	return (FAIL);
@@ -35,21 +45,21 @@ static int		request_filetransfert(t_client *c, char *src, char *dst)
 	pid = fork();
 	if (pid == 0)
 	{
-			ft_sprintf(s, "%s/%s", src, c->request.args[1]);
-			ft_sprintf(d, "%s/%s", dst, c->request.args[1]);
-			execl("/bin/cp", "cp", s, d, 0);
-			exit(SUCCESS);
+		ft_sprintf(s, "%s/%s", src, c->request.args[1]);
+		ft_sprintf(d, "%s/%s", dst, c->request.args[1]);
+		execl("/bin/cp", "cp", s, d, 0);
+		exit(SUCCESS);
 	}
 	return (SUCCESS);
 }
 
 int				request_put(t_client *c)
 {
-	if (request_access(c, c->request.cmd,USER))
+	if (request_access(c, c->request.cmd, USER))
 		return (FAIL);
 	if (c->request.nb != 2)
 	{
-		ft_fprintf(c->sock, "{y:1:%s}\n" ,"Error: put <file>");
+		ft_fprintf(c->sock, "{y:1:%s}\n", "Error: put <file>");
 		return (FAIL);
 	}
 	if ((request_fileexist(c, c->login.cpath, c->request.args[1])) == FAIL)
@@ -61,11 +71,11 @@ int				request_put(t_client *c)
 
 int				request_get(t_client *c)
 {
-	if (request_access(c, c->request.cmd,USER))
+	if (request_access(c, c->request.cmd, USER))
 		return (FAIL);
 	if (c->request.nb != 2)
 	{
-		ft_fprintf(c->sock, "{y:1:%s}\n" ,"Error: get <file>");
+		ft_fprintf(c->sock, "{y:1:%s}\n", "Error: get <file>");
 		return (FAIL);
 	}
 	if ((request_fileexist(c, ".", c->request.args[1])) == FAIL)

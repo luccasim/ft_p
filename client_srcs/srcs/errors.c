@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 16:49:10 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 16:51:06 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "client.h"
 
-t_dic_error g_client_error[] =
+static t_dic_error g_client_error[] =
 {
 	{PROTOCOL, "invalid protocol"},
 	{PORT, "invalid port range"},

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 16:29:27 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 16:44:14 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CLIENT_H
 # define CLIENT_H
 
@@ -6,7 +18,6 @@
 # include <sys/socket.h>
 # include <netdb.h>
 # include <arpa/inet.h>
-
 # include "ft_printf.h"
 # include "libft.h"
 # include "error.h"
@@ -26,7 +37,7 @@ typedef enum				e_enum_server_access
 	GUEST
 }							t_enum_server_access;
 
-typedef enum 				client_enum
+typedef enum				e_enum_client_error
 {
 	NOERROR = SUCCESS,
 	PROTOCOL,
@@ -36,14 +47,18 @@ typedef enum 				client_enum
 	SOCK,
 	CONNECT,
 	READ
-}							client_error;
+}							t_enum_client_error;
 
-typedef enum				s_client_debug
+typedef enum				e_enum_client_debug
 {
 	ALL = 0,
 	LOGIN = 2,
 	CLIENT = 4,
-}							t_client_debug;
+}							t_enum_client_debug;
+
+/*
+** Structs
+*/
 
 typedef struct				s_login
 {
@@ -63,22 +78,20 @@ typedef struct				s_client
 	int						sock;
 	struct protoent			*proto;
 	struct sockaddr_in		sin;
-}	 						t_client;
-
-typedef struct				s_server
-{
-	struct sockaddr_in		sin;
-}							t_server;
+}							t_client;
 
 typedef struct				s_env
 {
 	int						error;
 	t_login					login;
 	t_client				client;
-	t_server				server;
 }							t_env;
 
-t_env*						singleton(void);
+/*
+** Functions
+*/
+
+t_env						*singleton(void);
 int							errors(t_env *env);
 int							parser(t_env *env, int ac, char **av);
 int							client(t_env *env);

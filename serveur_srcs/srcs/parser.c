@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 17:07:16 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 17:07:19 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "serveur.h"
 
 static int		parser_usage(char *name)
 {
-	char*	format;
+	char		*format;
 
 	format = "{w:1}Usage: %s <Port> <IPversion?> <Limit?>\n";
 	ft_fprintf(2, format, name);

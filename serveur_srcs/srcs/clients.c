@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   clients.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 17:06:41 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 17:06:44 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "serveur.h"
 
 static int		clients_init(t_client *c)
 {
-	t_env*		env;
+	t_env		*env;
 
 	env = singleton();
 	ft_strcpy(c->pwd, "");
@@ -17,7 +29,7 @@ static int		clients_init(t_client *c)
 
 static int		clients_authentification(t_env *env, t_client *c)
 {
-	char*		msg;
+	char		*msg;
 	t_login		login;
 
 	msg = "{y:1}Welcom to %s, Press Enter to continue{e}\n";
@@ -37,8 +49,8 @@ static int		clients_authentification(t_env *env, t_client *c)
 
 static int		clients_handle(t_client *c)
 {
-	int		ret;
-	char	msg[SIZE + 1];
+	int			ret;
+	char		msg[SIZE + 1];
 
 	ret = 1;
 	while (ret > 0)
