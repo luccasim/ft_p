@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 18:00:34 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/18 18:00:36 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "error.h"
 
 int			error_check(void)
 {
 	t_error		error;
 
-	error = error_sglt(0,0,0);
+	error = error_sglt(0, 0, 0);
 	return (error.num);
 }
 
@@ -39,7 +51,7 @@ int			error_exit(void)
 {
 	t_error		error;
 
-	error = error_sglt(0,0,0);
+	error = error_sglt(0, 0, 0);
 	if (error.num == SUCCESS)
 		return (SUCCESS);
 	else if (error.num == FAIL)
@@ -49,7 +61,7 @@ int			error_exit(void)
 
 t_error		error_sglt(int num, char *msg, int action)
 {
-	static t_error	sglt = {0,0};
+	static t_error	sglt = {0, 0};
 
 	if (action == 1)
 	{
