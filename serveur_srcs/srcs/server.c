@@ -29,7 +29,7 @@ static int		server_client(t_env *env, t_server *server, t_client *client)
 		++env->nbrclients;
 		if ((pid = fork()) == FAIL)
 		{
-			client->name = inet_ntoa(client->csin.sin_addr);
+			ft_strcpy(client->name, inet_ntoa(client->csin.sin_addr));
 			display(env, FAIL, CLIENT, "NO RESOURCES FOR CONNECT...");
 			continue ;
 		}

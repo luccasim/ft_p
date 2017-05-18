@@ -11,9 +11,10 @@
 # include <signal.h>
 # include <sys/wait.h>
 # include <dirent.h>
-
-// A virer
-#include <stdio.h>
+# include <sys/mman.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <stdio.h>
 
 # include "libft.h"
 # include "ft_printf.h"
@@ -21,7 +22,9 @@
 # include "ft_time.h"
 
 # define STATE(env, msg)	display(env, ERROR, SERVER, msg)
+# define IDENTIFIED			424242
 # define PROMPT				"~>"
+# define SIZE				128
 
 /*
 **	Enums
@@ -60,7 +63,7 @@ typedef enum				e_enum_server_debug
 
 typedef enum				e_enum_server_access
 {
-	ROOT = 0,
+	MASTER = 1,
 	USER,
 	GUEST
 }							t_enum_server_access;
@@ -68,6 +71,15 @@ typedef enum				e_enum_server_access
 /*
 **	Structs
 */
+
+typedef struct				s_login
+{
+	int						mask;
+	int						access;
+	char					name[SIZE];
+	char					cpath[SIZE];
+	char					spath[SIZE];
+}							t_login;
 
 typedef struct				s_request
 {
@@ -105,12 +117,11 @@ typedef struct				s_client
 	int						port;
 	int						sock;
 	int						date;
-	int						access;
 	unsigned int			len;
-	char*					name;
-	char*					pwd;
-	char*					old;
-	char*					path;
+	char					name[SIZE];
+	char					pwd[SIZE];
+	char					old[SIZE];
+	t_login					login;
 	t_request				request;
 	struct sockaddr_in		csin;
 }							t_client;
@@ -137,11 +148,6 @@ typedef struct				s_server_cmd
 */
 
 t_env*						singleton(void);
-int							request_put(t_client *client);
-int							request_cd(t_client *client);
-int							request_pwd(t_client *client);
-int							request_quit(t_client *client);
-int							request(t_client *client);
 int							debug(t_env *env, int what);
 int							signals(void);
 int							errors(t_env *env);
@@ -149,5 +155,15 @@ int							parser(t_env *env, int ac, char **av);
 int							server(t_env *env);
 int							clients(t_env *env);
 int							display(t_env *env, int state, int who, char *msg);
+int							request(t_client *client, char *cmd);
+int							request_cmd(t_client *client);
+int							request_get(t_client *client);
+int							request_put(t_client *client);
+int							request_cd(t_client *client);
+int							request_pwd(t_client *client);
+int							request_lpwd(t_client *client);
+int							request_quit(t_client *client);
+int							request_system(t_client *client);
+int							request_access(t_client *c, char* cmd, int access);
 
 #endif
