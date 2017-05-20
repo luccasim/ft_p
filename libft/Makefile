@@ -34,7 +34,7 @@ $(DOBJ)/%.o:%.c
 	@$(CC) $(INC) -c $< -o $@
 
 test: $(NAME) main.c $(HEAD)
-	llvm-gcc -o test main.c -L . -lft $(MLX) -I includes
+	llvm-gcc -o test main.c -L . -lft -I includes
 
 clean:
 	@/bin/rm -rf $(DOBJ) > /dev/null 2>&1

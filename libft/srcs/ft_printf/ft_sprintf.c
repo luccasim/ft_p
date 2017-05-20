@@ -12,9 +12,9 @@
 
 #include "ft_printf_struct.h"
 
-static char*	buffer_cpy(char *src, char *dest)
+static char		*buffer_cpy(char *src, char *dest)
 {
-	char*	d;
+	char		*d;
 
 	d = dest;
 	while (*src)

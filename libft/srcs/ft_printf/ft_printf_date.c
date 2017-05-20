@@ -49,7 +49,8 @@ int			ft_printf_date(va_list ap)
 	format = NULL;
 	if (flags->length == 'z')
 		format = va_arg(ap, char*);
-	format_date(flags->length, time, format);
+	if (time)
+		format_date(flags->length, time, format);
 	ft_printf_join(flags, NULL);
 	return (0);
 }
