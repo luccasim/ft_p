@@ -1,21 +1,45 @@
-EXEC_1 	= client_srcs
-EXEC_2 	= serveur_srcs
-LIB		= libft
+#******************************************************************************#
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: luccasim <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2016/12/05 12:00:41 by luccasim          #+#    #+#              #
+#    Updated: 2016/12/05 12:00:43 by luccasim         ###   ########.fr        #
+#                                                                              #
+#******************************************************************************#
 
-all:
-	@make -C $(LIB) > /dev/null 2>&1
-	@make -C $(EXEC_1) > /dev/null 2>&1
-	@make -C $(EXEC_2) > /dev/null 2>&1
-	ln -s $(EXEC_1)/client . > /dev/null 2>&1
-	ln -s $(EXEC_2)/serveur . > /dev/null 2>&1
+NAME		= 	$(NAME1) $(NAME2)
+NAME1 		=	serveur
+NAME2		=	client
+DEP_1		=	serveur_srcs/serveur
+DEP_2		=	client_srcs/client
+
+all: $(NAME)
+
+$(NAME1): $(DEP_1)
+	@cp $(DEP_1) .
+
+$(NAME2): $(DEP_2)
+	@cp $(DEP_2) .
+
+$(DEP_1):
+	@make -C serveur_srcs/
+
+$(DEP_2):
+	@make -C client_srcs/
 
 clean:
-	@make -C $(LIB) clean > /dev/null 2>&1
-	@make -C $(EXEC_1) clean > /dev/null 2>&1
-	@make -C $(EXEC_2) clean > /dev/null 2>&1
+	@make -C serveur_srcs/ clean
+	@make -C client_srcs/ clean
 
 fclean: clean
-	/bin/rm client
-	/bin/rm serveur
+	@make -C serveur_srcs/ fclean
+	@make -C client_srcs/ fclean
+	@/bin/rm -rf $(NAME1)
+	@/bin/rm -rf $(NAME2)
 
 re: fclean all
+
+.PHONY: re all clean fclean
