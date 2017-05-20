@@ -14,8 +14,8 @@
 
 int			request_lpwd(t_client *c)
 {
-	if (request_access(c, c->request.cmd, USER))
+	if (request_access(c, c->request.cmd, ACCESS_USER))
 		return (FAIL);
-	ft_fprintf(c->sock, "{y:1:%s}\n", c->login.cpath);
+	message(MSG_RESPONSE, 0, c->login.cpath);
 	return (SUCCESS);
 }

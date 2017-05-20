@@ -12,7 +12,7 @@
 
 #include "serveur.h"
 
-static int		server_connexions(t_env *env, t_server *server)
+static int		server_handle_clients(t_env *env, t_server *server)
 {
 	char			*blockmsg;
 	char			*unblockmsg;
@@ -28,27 +28,29 @@ static int		server_connexions(t_env *env, t_server *server)
 	return (SUCCESS);
 }
 
-static int		server_client(t_env *env, t_server *server, t_client *client)
+static int		server_loop(t_env *env, t_server *server, t_client *c)
 {
 	int					pid;
+	int					loop;
 
-	while (env->quit)
+	loop = 1;
+	while (loop)
 	{
-		if ((client->sock = accept(server->sock,
-			(struct sockaddr *)&client->csin, &client->len)) == FAIL)
+		if ((c->sock = accept(server->sock,
+			(struct sockaddr *)&c->csin, &c->len)) <= 0)
 			return (THROW(ACCEPT));
 		++env->connexion;
 		++env->nbrclients;
 		if ((pid = fork()) == FAIL)
 		{
-			ft_strcpy(client->name, inet_ntoa(client->csin.sin_addr));
+			ft_strlcpy(c->name, inet_ntoa(c->csin.sin_addr), SIZE);
 			display(env, FAIL, CLIENT, "NO RESOURCES FOR CONNECT...");
 			continue ;
 		}
 		if (pid == 0)
 			clients(env);
 		else
-			server_connexions(env, server);
+			server_handle_clients(env, server);
 	}
 	return (SUCCESS);
 }
@@ -69,7 +71,7 @@ int				server(t_env *env)
 	if (listen(server->sock, server->limit) == FAIL)
 		return (THROW(LISTEN));
 	STATE(env, "RUNNING!");
-	server_client(env, server, &env->client);
+	server_loop(env, server, &env->client);
 	close(env->server.sock);
 	STATE(env, "CLOSED!");
 	return (SUCCESS);

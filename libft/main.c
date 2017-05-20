@@ -11,23 +11,12 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include "error.h"
 #include "get_next_line.h"
 #include <unistd.h>
 
 int		main(int ac, char **av)
 {
-	char	*line;
-	int		fd;
-
-	if (ac == 2)
-	{
-		line = 0;
-		fd = open(*++av, O_RDONLY);
-		while (get_next_line(fd, &line) > 0)
-		{
-			PUTSTR(line);
-			ft_strdel(&line);
-		}
-	}
-	return (0);
+	PUTERROR("Je suis une erreur");
+	return (EXIT);
 }

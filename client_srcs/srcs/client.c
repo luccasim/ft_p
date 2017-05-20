@@ -12,24 +12,6 @@
 
 #include "client.h"
 
-static int		client_recv(t_client *c)
-{
-	char		buf[4095];
-	int			ret;
-
-	ret = 1;
-	while (ret)
-	{
-		ret = read(c->sock, buf, 4096);
-		if (ret <= 1)
-			return (FAIL);
-		buf[ret] = 0;
-		write(0, buf, ret);
-		return (SUCCESS);
-	}
-	return (SUCCESS);
-}
-
 static int		client_send(t_client *c)
 {
 	char		*line;
@@ -38,25 +20,34 @@ static int		client_send(t_client *c)
 	line = 0;
 	ret = get_next_line(0, &line);
 	send(c->sock, line, ft_strlen(line) + 1, 0);
+	if (ft_strnequ(line, "quit", 4))
+		c->sock = 0;
 	ft_strdel(&line);
-	client_recv(c);
-	if (ret == FAIL)
-		return (THROW(READ));
+	return (SUCCESS);
+}
+
+static int		client_recv(t_client *c)
+{
+	t_message	msg;
+
+	recv(c->sock, &msg, sizeof(msg), 0);
+	msg.receipt = 0;
+	ft_fprintf(msg.fd, msg.msg);
+	if (msg.type == MSG_REQUEST)
+		client_send(c);
 	return (SUCCESS);
 }
 
 static int		client_loop(t_client *c)
 {
-	while (client_recv(c) >= SUCCESS)
-	{
-		if (client_send(c) != SUCCESS)
-			return (FAIL);
-	}
+	while (c->sock)
+		client_recv(c);
 	return (SUCCESS);
 }
 
 static int		client_authentification(t_env *env, t_client *c)
 {
+	ft_fprintf(1, "authentification!\n");
 	client_recv(c);
 	send(c->sock, &env->login, sizeof(t_login), 0);
 	recv(c->sock, &env->login, sizeof(t_login), 0);
@@ -67,10 +58,8 @@ static int		client_authentification(t_env *env, t_client *c)
 int				client(t_env *env)
 {
 	t_client	*c;
-	t_server	*s;
 
 	c = &env->client;
-	s = &env->server;
 	if ((c->sock = socket(PF_INET, SOCK_STREAM, c->proto->p_proto)) == FAIL)
 		return (THROW(SOCK));
 	if ((connect(c->sock, (const struct sockaddr *)&c->sin,

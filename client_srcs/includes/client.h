@@ -24,20 +24,21 @@
 # include "get_next_line.h"
 
 # define SIZE				128
+# define MSG_SIZE			2048
 # define IDENTIFIED			424242
 
 /*
 ** Enums
 */
 
-typedef enum				e_enum_server_access
+typedef enum				e_enum_access
 {
-	MASTER = 1,
-	USER,
-	GUEST
-}							t_enum_server_access;
+	ACCESS_MASTER = 1,
+	ACCESS_USER,
+	ACCESS_GUEST
+}							t_enum_access;
 
-typedef enum				e_enum_client_error
+typedef enum				e_enum_errors
 {
 	NOERROR = SUCCESS,
 	PROTOCOL,
@@ -46,15 +47,28 @@ typedef enum				e_enum_client_error
 	ACCESS,
 	SOCK,
 	CONNECT,
-	READ
-}							t_enum_client_error;
+	READ,
+	GETCWD
+}							t_enum_errors;
 
-typedef enum				e_enum_client_debug
+typedef enum				e_enum_debug
 {
-	ALL = 0,
-	LOGIN = 2,
-	CLIENT = 4,
-}							t_enum_client_debug;
+	DEBUG_ALL = 6,
+	DEBUG_LOGIN = 2,
+	DEBUG_CLIENT = 4,
+}							t_enum_debug;
+
+typedef enum				e_enum_fd
+{
+	FD_SUCCESS = 1,
+	FD_ERROR = 2
+}							t_enum_fd;
+
+typedef enum				e_enum_msg
+{
+	MSG_RESPONSE,
+	MSG_REQUEST
+}							t_enum_msg;
 
 /*
 ** Structs
@@ -69,10 +83,17 @@ typedef struct				s_login
 	char					spath[SIZE];
 }							t_login;
 
+typedef struct				s_message
+{
+	char					msg[MSG_SIZE];
+	int						fd;
+	t_enum_msg				type;
+	int						receipt;
+}							t_message;
+
 typedef struct				s_client
 {
 	char					name[SIZE];
-	char					addr[SIZE];
 	int						port;
 	int						access;
 	int						sock;
@@ -88,6 +109,16 @@ typedef struct				s_env
 }							t_env;
 
 /*
+** Dictionary
+*/
+
+typedef struct				s_dict_option
+{
+	char					*key;
+	int						(*function)(t_client *, char*);
+}							t_dict_option;
+
+/*
 ** Functions
 */
 
@@ -96,5 +127,7 @@ int							errors(t_env *env);
 int							parser(t_env *env, int ac, char **av);
 int							client(t_env *env);
 int							debug(int act);
+int							option_name(t_client *c, char *str);
+int							option_access(t_client *c, char *str);
 
 #endif

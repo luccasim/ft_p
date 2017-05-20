@@ -80,5 +80,6 @@ int		ft_putchar_fd(char c, int fd);
 void	ft_strdelsplit(char **split);
 size_t	ft_strstrlen(char **split);
 void	ft_swap(int *a, int *b);
+size_t	ft_strlcpy(char *dest, const char *src, size_t len);
 
 #endif

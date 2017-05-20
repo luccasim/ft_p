@@ -12,14 +12,15 @@
 
 #include "client.h"
 
-static t_dic_error g_client_error[] =
+static t_dict_error g_errors[] =
 {
 	{PROTOCOL, "invalid protocol"},
 	{PORT, "invalid port range"},
 	{ADDR, "invalid address"},
-	{ACCESS, "<access?> access={1-3}"},
+	{GETCWD, "getcwd() fail."},
 	{SOCK, "socket() failed."},
 	{CONNECT, "connect() failed."},
+	{READ, "read() fail."},
 	{NOERROR, 0}
 };
 
@@ -27,7 +28,7 @@ int		errors(t_env *env)
 {
 	if (ERROR)
 		ft_fprintf(2, "{r:1:%-10s}", "ERROR:");
-	env->error = CATCH(g_client_error);
+	env->error = CATCH(g_errors);
 	close(env->client.sock);
 	return (env->error);
 }

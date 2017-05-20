@@ -12,7 +12,7 @@
 
 #include "serveur.h"
 
-static t_server_cmd		g_server_cmd[] =
+static t_dict_cmd		g_cmds[] =
 {
 	{"put", 0, request_put},
 	{"lpwd", 0, request_lpwd},
@@ -27,33 +27,27 @@ static t_server_cmd		g_server_cmd[] =
 
 int				request_access(t_client *c, char *cmd, int access)
 {
+	char		msg[MSG_SIZE];
+
 	if (c->login.access > access)
 	{
-		ft_fprintf(c->sock, "{y:1}Error: %s command denied.{e}\n", cmd);
+		ft_snprintf(msg, MSG_SIZE, "%s command denied.", cmd);
+		message(MSG_RESPONSE, FD_ERROR, msg);
 		return (FAIL);
 	}
 	return (SUCCESS);
 }
 
-int				request_cmd(t_client *c)
+int				request_quit(t_client *client)
 {
 	t_env		*env;
-	char		*m;
-	char		*u;
-	char		*g;
 
 	env = singleton();
-	m = "{d:1}Master: %s{e}\n";
-	u = "{d:1}User: %s{e}\n";
-	if (c->login.access <= MASTER)
-		m = "{w:1}Master: %s{e}\n";
-	if (c->login.access <= USER)
-		u = "{w:1}User: %s{e}\n";
-	g = "{w:1}Guest: %s{e}\n";
-	ft_fprintf(c->sock, m, "mkdir, rmdir, cp, shutdown.");
-	ft_fprintf(c->sock, u, "get, put, lls, lcd, lpwd.");
-	ft_fprintf(c->sock, g, "cmd, ls, cd, pwd, quit.");
-	return (SUCCESS);
+	display(env, SUCCESS, CLIENT, "DISCONNECTED!");
+	message(MSG_RESPONSE, 0, "{y:1}Disconnected!{e}\n");
+	message(MSG_RESPONSE, FD_SUCCESS, 0);
+	close(client->sock);
+	exit(SUCCESS);
 }
 
 static int		request_set(t_client *c, char *cmd)
@@ -81,16 +75,21 @@ static int		request_set(t_client *c, char *cmd)
 
 static int		request_state(int state, char *str)
 {
-	char		cmd[SIZE + 1];
+	char		cmd[SIZE];
 	t_env		*env;
 	t_client	*c;
 
 	env = singleton();
 	c = &env->client;
-	ft_snprintf(cmd, SIZE, "Command: '%s'", str);
+	ft_snprintf(cmd, SIZE, "COMMAND: '%s'", str);
 	display(env, state, CLIENT, cmd);
-	if (state == FAIL)
-		request_cmd(&env->client);
+	if (state == SUCCESS)
+		message(MSG_RESPONSE, FD_SUCCESS, 0);
+	if (state == 1)
+	{
+		ft_snprintf(cmd, SIZE, "Command: '%s' undefined!", str);
+		message(MSG_RESPONSE, FD_ERROR, cmd);
+	}
 	ft_strdel(&str);
 	return (SUCCESS);
 }
@@ -105,19 +104,18 @@ int				request(t_client *c, char *str)
 	str = ft_strtrim(str);
 	if (request_set(c, str) == SUCCESS)
 	{
-		while ((key = g_server_cmd[i].key) != 0)
+		while ((key = g_cmds[i].key) != 0)
 		{
 			if (ft_strequ(c->request.args[0], key))
 			{
-				c->request.cmd = g_server_cmd[i].cmd;
-				i = g_server_cmd[i].function(c);
+				c->request.cmd = g_cmds[i].cmd;
+				i = g_cmds[i].function(c);
 				request_state(i, str);
 				return (i);
 			}
 			i++;
 		}
 	}
-	ft_fprintf(c->sock, "{y:1}Error: command '%s' undefined!\n{e}", str);
-	request_state(FAIL, str);
+	request_state(1, str);
 	return (FAIL);
 }

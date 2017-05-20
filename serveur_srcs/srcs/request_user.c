@@ -12,10 +12,11 @@
 
 #include "serveur.h"
 
-static int		request_fileexist(t_client *c, char *path, char *file)
+static int		request_fileexist(char *path, char *file)
 {
 	DIR				*dir;
 	struct dirent	*dp;
+	char			msg[MSG_SIZE];
 
 	if ((dir = opendir(path)) == 0)
 		return (FAIL);
@@ -27,26 +28,27 @@ static int		request_fileexist(t_client *c, char *path, char *file)
 				return (SUCCESS);
 			else
 			{
-				ft_fprintf(c->sock, "{y:1}'%s' is not a file!{e}\n", c, file);
+				ft_snprintf(msg, MSG_SIZE, "'%s' is not a file!\n", file);
+				message(MSG_RESPONSE, FD_ERROR, msg);
 				return (FAIL);
 			}
 		}
-	ft_fprintf(c->sock, "{y:1:%s}\n", "File not found!");
+	message(MSG_RESPONSE, FD_ERROR, "File not found!");
 	closedir(dir);
 	return (FAIL);
 }
 
 static int		request_filetransfert(t_client *c, char *src, char *dst)
 {
-	int		pid;
-	char	d[SIZE];
-	char	s[SIZE];
+	int			pid;
+	char		d[SIZE];
+	char		s[SIZE];
 
 	pid = fork();
 	if (pid == 0)
 	{
-		ft_sprintf(s, "%s/%s", src, c->request.args[1]);
-		ft_sprintf(d, "%s/%s", dst, c->request.args[1]);
+		ft_snprintf(s, SIZE, "%s/%s", src, c->request.args[1]);
+		ft_snprintf(d, SIZE, "%s/%s", dst, c->request.args[1]);
 		execl("/bin/cp", "cp", s, d, 0);
 		exit(SUCCESS);
 	}
@@ -55,14 +57,14 @@ static int		request_filetransfert(t_client *c, char *src, char *dst)
 
 int				request_put(t_client *c)
 {
-	if (request_access(c, c->request.cmd, USER))
+	if (request_access(c, c->request.cmd, ACCESS_USER))
 		return (FAIL);
 	if (c->request.nb != 2)
 	{
-		ft_fprintf(c->sock, "{y:1:%s}\n", "Error: put <file>");
+		message(MSG_RESPONSE, FD_ERROR, "put <file>");
 		return (FAIL);
 	}
-	if ((request_fileexist(c, c->login.cpath, c->request.args[1])) == FAIL)
+	if ((request_fileexist(c->login.cpath, c->request.args[1])) == FAIL)
 		return (FAIL);
 	if ((request_filetransfert(c, c->login.cpath, c->login.spath)) == FAIL)
 		return (FAIL);
@@ -71,14 +73,14 @@ int				request_put(t_client *c)
 
 int				request_get(t_client *c)
 {
-	if (request_access(c, c->request.cmd, USER))
+	if (request_access(c, c->request.cmd, ACCESS_USER))
 		return (FAIL);
 	if (c->request.nb != 2)
 	{
-		ft_fprintf(c->sock, "{y:1:%s}\n", "Error: get <file>");
+		message(MSG_RESPONSE, FD_ERROR, "get <file>");
 		return (FAIL);
 	}
-	if ((request_fileexist(c, ".", c->request.args[1])) == FAIL)
+	if ((request_fileexist(".", c->request.args[1])) == FAIL)
 		return (FAIL);
 	if ((request_filetransfert(c, c->login.spath, c->login.cpath)) == FAIL)
 		return (FAIL);

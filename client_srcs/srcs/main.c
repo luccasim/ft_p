@@ -16,16 +16,17 @@ static int		set_env(t_env *env, char **av)
 {
 	char		*path;
 
-	path = getcwd(0, 0);
 	env->error = SUCCESS;
-	ft_strcpy(env->login.name, av[0]);
-	ft_strcpy(env->login.cpath, path);
-	ft_strcpy(env->login.spath, "(undefined).");
+	ft_strlcpy(env->login.name, av[0], SIZE);
+	ft_strlcpy(env->login.spath, "", SIZE);
 	env->login.mask = IDENTIFIED;
-	ft_strcpy(env->client.name, av[0]);
-	ft_strcpy(env->client.addr, "0.0.0.0");
 	env->client.port = 0;
-	env->client.access = USER;
+	env->client.access = ACCESS_USER;
+	env->login.access = ACCESS_USER;
+	if ((path = getcwd(0, 0)) == 0)
+		return (THROW(GETCWD));
+	ft_strlcpy(env->client.name, av[0], SIZE);
+	ft_strlcpy(env->login.cpath, path, SIZE);
 	ft_strdel(&path);
 	return (SUCCESS);
 }

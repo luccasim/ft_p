@@ -14,48 +14,57 @@
 # define ERROR_H
 
 /*
-** Uses EXIT in the main return and PERROR, for handle simple error
-** Uses THROW, CATCH, and dictionary for handle details errors.
-** Uses PERROR(msg) will set an error with a message
-** Uses THROW(err) will set a e_error and return FAIL
-** Uses CATCH(dic) will handle all e_error and return the error
-** Uses ERROR will check if the singleton contain an error
+** Uses EXIT will check and print if an error was reported. 
+** Uses THROW(err) will report an error and returns FAIL.
+** Uses PERROR(msg) will report an error and write directly on stderr.
+** Uses PUTERROR(msg) will write directly on stderr without report.
+** Uses CATCH(dic) will handle the error dictonary.
+** Uses ERROR will check if an error was report.
 ** WARNING : a dictionary should finish with SUCCESS key value.
 */
 
 # include "ft_printf.h"
-# include "libft.h"
 
-# define THROW(err)		error_throw(err)
-# define PERROR(msg) 	error_sglt(FAIL, msg, 1)
-# define CATCH(dic)		error_catch(dic)
 # define ERROR			error_check()
-# define EXIT			error_exit()
+# define EXIT			error_catch(0)
+# define THROW(err)		error_throw(err)
+# define PERROR(msg) 	error_print(msg)
+# define CATCH(dic)		error_catch(dic)
+# define PUTERROR(a)	ft_fprintf(2, "{r:1:%s} {w:1:%s}\n", "Error:", a)
 
-# define PUTERROR(a)	ft_fprintf(2, "{w:1:%s}\n", a)
+/*
+** Enum
+*/
 
-typedef enum			e_error
+typedef enum			e_enum_ret
 {
 	FAIL = -1,
 	SUCCESS = 0
-}						t_e_error;
+}						t_enum_ret;
+
+/*
+** Struct
+*/
 
 typedef struct			s_error
 {
-	t_e_error			num;
-	char				*msg;
+	t_enum_ret			num;
+	char				msg[128];
 }						t_error;
 
-typedef struct			s_dic_error
+/*
+** Dictionary
+*/
+
+typedef struct			s_dict_error
 {
 	int					key;
 	char				*value;
-}						t_dic_error;
+}						t_dict_error;
 
-t_error					error_sglt(int num, char *msg, int action);
 int						error_check(void);
 int						error_throw(int num);
-int						error_catch(t_dic_error *dic);
-int						error_exit(void);
+int						error_catch(t_dict_error *dic);
+int						error_print(char *msg);
 
 #endif
