@@ -35,6 +35,11 @@ static int		client_recv(t_client *c)
 	ft_fprintf(msg.fd, msg.msg);
 	if (msg.type == MSG_REQUEST)
 		client_send(c);
+	if (msg.type == MSG_DIE)
+	{
+		close(c->sock);
+		exit(SUCCESS);
+	}
 	return (SUCCESS);
 }
 

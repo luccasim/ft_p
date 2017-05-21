@@ -23,13 +23,17 @@ int				message(int type, int fd, char *msg)
 	if (fd == FD_SUCCESS)
 		ft_snprintf(message.msg, MSG_SIZE, "{g:1}SUCCESS{e}\n");
 	else if (fd == FD_ERROR)
-		ft_snprintf(message.msg, MSG_SIZE, "{r:1}ERROR:{e} %s\n", msg);
+		ft_snprintf(message.msg, MSG_SIZE, "{r:1}ERROR: %s{e}\n", msg);
 	else
 		ft_strncpy(message.msg, msg, MSG_SIZE - 1);
 	if (env->client.login.access == ACCESS_GUEST)
 		ft_fprintf(env->client.sock, message.msg);
 	else
+	{
+		if (env->client.login.access == ACCESS_MASTER)
+			ft_snprintf(message.msg, MSG_SIZE, "{y:1:%s}", message.msg);
 		send(env->client.sock, &message, sizeof(t_message), 0);
+	}
 	return (SUCCESS);
 }
 
@@ -51,6 +55,8 @@ int				display(t_env *env, int state, int who, char *msg)
 	char		*format;
 	char		f[128];
 	
+	if (env->display == 0)
+		return (SUCCESS);
 	display_state(state, st);
 	name = (who == SERVER) ? env->server.name : env->client.name;
 	format = "{w:1}[%hk] %-16.15s[{c:1:%d}/{g:1:%d}{w:1}] %s{e}\n";

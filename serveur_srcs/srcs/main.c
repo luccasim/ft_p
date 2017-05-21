@@ -33,6 +33,7 @@ static int		env_init(t_env *env, char **av)
 	env->error = SUCCESS;
 	env->nbrclients = 0;
 	env->connexion = 0;
+	env->display = 0;
 	server->domain = PF_INET;
 	server->sock = -1;
 	server->limit = 5;

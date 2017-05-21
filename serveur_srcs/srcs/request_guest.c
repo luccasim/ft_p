@@ -39,30 +39,17 @@ int					request_cd(t_client *client)
 	return (SUCCESS);
 }
 
-int					request_cmd(t_client *c)
+int					request_quit(t_client *client)
 {
-	char			*m;
-	char			*u;
-	char			*g;
-	char			msg[MSG_SIZE];
-	char			tmp[SIZE];
+	t_env			*env;
 
-	m = "{d:1}Master: %s{e}\n";
-	u = "{d:1}User: %s{e}\n";
-	if (c->login.access <= ACCESS_MASTER)
-		m = "{w:1}Master: %s{e}\n";
-	if (c->login.access <= ACCESS_USER)
-		u = "{w:1}User: %s{e}\n";
-	g = "{w:1}Guest: %s{e}\n";
-	msg[0] = 0;
-	ft_snprintf(tmp, SIZE, m, "mkdir, cp, shutdown.");
-	ft_strcat(msg, tmp);
-	ft_snprintf(tmp, SIZE, u, "get, put, lls, lcd, lpwd.");
-	ft_strcat(msg, tmp);
-	ft_snprintf(tmp, SIZE, g, "cmd, ls, cd, pwd, quit.");
-	ft_strcat(msg, tmp);
-	message(MSG_RESPONSE, 0, msg);
-	return (SUCCESS);
+	env = singleton();
+	env->nbrclients--;
+	display(env, SUCCESS, CLIENT, "DISCONNECTED!");
+	message(MSG_RESPONSE, 0, "{y:1}Disconnected!{e}\n");
+	message(MSG_RESPONSE, FD_SUCCESS, 0);
+	close(client->sock);
+	exit(SUCCESS);
 }
 
 int					request_pwd(t_client *client)
@@ -85,15 +72,15 @@ static int			request_tmp(char *file)
 	char			*b;
 
 	fd = open(file, O_RDONLY);
-	if (fd > 0)
+	if (fd != FAIL)
 	{
 		if (fstat(fd, &st) == 0)
 		{
 			if ((b = mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) != 0)
 			{
 				message(MSG_RESPONSE, 0, b);
+				munmap(b, st.st_size);
 			}
-			munmap(b, st.st_size);
 		}
 	}
 	close(fd);
@@ -111,6 +98,7 @@ int					request_system(t_client *client)
 	if (pid == 0)
 	{
 		r = &client->request;
+		ft_fprintf(fd, "Result of '%s' :\n", r->request);
 		dup2(fd, 1);
 		dup2(fd, 2);
 		execv(r->cmd, r->args);

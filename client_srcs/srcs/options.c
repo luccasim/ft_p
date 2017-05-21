@@ -6,14 +6,14 @@ int				option_access(t_client *c, char *str)
 	t_env	*env;
 
 	nb = ft_atoi(str);
-	if (nb >= 1 && nb <= 3 )
+	if (nb >= 1 && nb < 3)
 	{
 		env = singleton();
 		env->login.access = nb;
 		c->access = nb;
 	}
 	else
-		return (PERROR("<access?> = {1-3} ; Default : access=2"));
+		return (PERROR("<access?> = {1-2} ; Default : access=2"));
 	return (SUCCESS);
 }
 

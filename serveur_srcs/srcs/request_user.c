@@ -38,26 +38,32 @@ static int		request_fileexist(char *path, char *file)
 	return (FAIL);
 }
 
-static int		request_filetransfert(t_client *c, char *src, char *dst)
+int				request_prompt(t_client *c)
 {
-	int			pid;
-	char		d[SIZE];
-	char		s[SIZE];
+	char		res[SIZE];
 
-	pid = fork();
-	if (pid == 0)
+	if (request_access(c, "prompt", ACCESS_USER))
+		return (FAIL);
+	ft_bzero(res, SIZE - 1);
+	message(MSG_REQUEST, 0, "Would you change your prompt?(y/n)\n");
+	recv(c->sock, &res, SIZE, 0);
+	if (ft_strnequ(res, "y", 1))
 	{
-		ft_snprintf(s, SIZE, "%s/%s", src, c->request.args[1]);
-		ft_snprintf(d, SIZE, "%s/%s", dst, c->request.args[1]);
-		execl("/bin/cp", "cp", s, d, 0);
-		exit(SUCCESS);
+		message(MSG_REQUEST, 0, "Set your new prompt.\n");
+		recv(c->sock, &res, SIZE, 0);
+		ft_strlcpy(c->prompt, res, SIZE);
+	}
+	else
+	{
+		message(MSG_RESPONSE, FD_ERROR, "Change prompt operation cancelled\n");
+		return (FAIL);
 	}
 	return (SUCCESS);
 }
 
 int				request_put(t_client *c)
 {
-	if (request_access(c, c->request.cmd, ACCESS_USER))
+	if (request_access(c, "put", ACCESS_USER))
 		return (FAIL);
 	if (c->request.nb != 2)
 	{
@@ -66,14 +72,15 @@ int				request_put(t_client *c)
 	}
 	if ((request_fileexist(c->login.cpath, c->request.args[1])) == FAIL)
 		return (FAIL);
-	if ((request_filetransfert(c, c->login.cpath, c->login.spath)) == FAIL)
+	if ((transfert(c->login.cpath, c->login.spath, c->request.args[1]))
+		== FAIL)
 		return (FAIL);
 	return (SUCCESS);
 }
 
 int				request_get(t_client *c)
 {
-	if (request_access(c, c->request.cmd, ACCESS_USER))
+	if (request_access(c, "get", ACCESS_USER))
 		return (FAIL);
 	if (c->request.nb != 2)
 	{
@@ -82,7 +89,8 @@ int				request_get(t_client *c)
 	}
 	if ((request_fileexist(".", c->request.args[1])) == FAIL)
 		return (FAIL);
-	if ((request_filetransfert(c, c->login.spath, c->login.cpath)) == FAIL)
+	if ((transfert(c->login.spath, c->login.cpath, c->request.args[1]))
+		== FAIL)
 		return (FAIL);
 	return (SUCCESS);
 }

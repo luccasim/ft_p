@@ -24,6 +24,7 @@ static int		clients_init(t_client *c)
 	ft_sprintf(c->login.name, "Guest %d", env->nbrclients);
 	ft_strlcpy(c->login.cpath, "", SIZE);
 	ft_strlcpy(c->login.spath, env->server.path, SIZE);
+	ft_strlcpy(c->prompt, "~>", SIZE);
 	return (SUCCESS);
 }
 
@@ -62,7 +63,7 @@ static int		clients_handle(t_client *c)
 	ret = 1;
 	while (ret > 0)
 	{
-		ft_snprintf(prompt, MSG_SIZE, "[%s]%s%s ", c->name, c->pwd, PROMPT);
+		ft_snprintf(prompt, MSG_SIZE, "[%s]%s%s ", c->name, c->pwd, c->prompt);
 		message(MSG_REQUEST, 0, prompt);
 		ret = recv(c->sock, msg, SIZE, 0);
 		msg[ret - 1] = 0;

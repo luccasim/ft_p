@@ -67,7 +67,8 @@ typedef enum				e_enum_fd
 typedef enum				e_enum_msg
 {
 	MSG_RESPONSE,
-	MSG_REQUEST
+	MSG_REQUEST,
+	MSG_DIE
 }							t_enum_msg;
 
 /*
