@@ -1,5 +1,15 @@
 #include "serveur.h"
 
+int				option_display(t_server *server, char *str)
+{
+	t_env		*env;
+
+	(void)server;
+	env = singleton();
+	env->display = ft_atoi(str);
+	return (SUCCESS);
+}
+
 int				option_name(t_server *server, char *str)
 {
 	ft_strlcpy(server->name, str, SIZE);

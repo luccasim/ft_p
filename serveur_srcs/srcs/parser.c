@@ -17,6 +17,7 @@ static t_dict_option g_options[] =
 	{"ip=", option_ip},
 	{"name=", option_name},
 	{"limit=", option_limit},
+	{"display=", option_display},
 	{0, 0}
 };
 
@@ -78,6 +79,7 @@ static int		parser_value(t_server *server, char **av)
 	server->domain = PF_INET;
 	server->sin.sin_family = AF_INET;
 	server->limit = 5;
+	server->pid = getpid();
 	return (SUCCESS);
 }
 

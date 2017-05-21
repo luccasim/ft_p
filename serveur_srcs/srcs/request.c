@@ -16,14 +16,48 @@ static t_dict_cmd		g_cmds[] =
 {
 	{"put", 0, request_put},
 	{"lpwd", 0, request_lpwd},
+	{"lls", "/bin/ls", request_lls},
+	{"lcd", 0, request_lcd},
 	{"cmd", 0, request_cmd},
 	{"get", 0, request_get},
 	{"pwd", 0, request_pwd},
 	{"cd", 0, request_cd},
 	{"ls", "/bin/ls", request_system},
 	{"quit", 0, request_quit},
+	{"shutdown", "/bin/kill", request_shutdown},
+	{"display", 0, request_display},
+	{"mkdir", "/bin/mkdir", request_mkdir},
+	{"rmdir", "/bin/rmdir", request_rmdir},
+	{"name", 0, request_name},
+	{"prompt", 0, request_prompt},
 	{0, 0, 0}
 };
+
+int				request_cmd(t_client *c)
+{
+	char		*m;
+	char		*u;
+	char		*g;
+	char		msg[MSG_SIZE];
+	char		tmp[SIZE];
+
+	m = "{d:1}Master: %s{e}\n";
+	u = "{d:1}User: %s{e}\n";
+	if (c->login.access <= ACCESS_MASTER)
+		m = "{w:1}Master: %s{e}\n";
+	if (c->login.access <= ACCESS_USER)
+		u = "{w:1}User: %s{e}\n";
+	g = "{w:1}Guest: %s{e}\n";
+	msg[0] = 0;
+	ft_snprintf(tmp, SIZE, m, "display, mkdir, rmdir, name, shutdown.");
+	ft_strcat(msg, tmp);
+	ft_snprintf(tmp, SIZE, u, "get, put, lls, lcd, lpwd, prompt.");
+	ft_strcat(msg, tmp);
+	ft_snprintf(tmp, SIZE, g, "cmd, ls, cd, pwd, quit.");
+	ft_strcat(msg, tmp);
+	message(MSG_RESPONSE, 0, msg);
+	return (SUCCESS);
+}
 
 int				request_access(t_client *c, char *cmd, int access)
 {
@@ -38,23 +72,13 @@ int				request_access(t_client *c, char *cmd, int access)
 	return (SUCCESS);
 }
 
-int				request_quit(t_client *client)
-{
-	t_env		*env;
-
-	env = singleton();
-	display(env, SUCCESS, CLIENT, "DISCONNECTED!");
-	message(MSG_RESPONSE, 0, "{y:1}Disconnected!{e}\n");
-	message(MSG_RESPONSE, FD_SUCCESS, 0);
-	close(client->sock);
-	exit(SUCCESS);
-}
-
 static int		request_set(t_client *c, char *cmd)
 {
 	char		*res;
 	t_request	*r;
 
+	if (!cmd)
+		exit(FAIL);
 	r = &c->request;
 	r->request = 0;
 	r->cmd = 0;

@@ -34,7 +34,6 @@
 
 # define STATE(env, msg)	display(env, ERROR, SERVER, msg)
 # define IDENTIFIED			424242
-# define PROMPT				"~>"
 # define SIZE				128
 # define MSG_SIZE 			2048
 
@@ -89,7 +88,8 @@ typedef enum				e_enum_fd
 typedef enum				e_enum_msg
 {
 	MSG_RESPONSE,
-	MSG_REQUEST
+	MSG_REQUEST,
+	MSG_DIE
 }							t_enum_msg;
 
 /*
@@ -128,6 +128,7 @@ typedef struct				s_server
 	int						domain;
 	int						date;
 	int						limit;
+	int						pid;
 	char					name[SIZE];
 	char					path[SIZE];
 	struct protoent			*protocol;
@@ -144,6 +145,7 @@ typedef struct				s_client
 	char					name[SIZE];
 	char					pwd[SIZE];
 	char					old[SIZE];
+	char					prompt[SIZE];
 	t_login					login;
 	t_request				request;
 	struct sockaddr_in		csin;
@@ -155,6 +157,7 @@ typedef struct				s_env
 	t_client				client;
 	int						connexion;
 	int						nbrclients;
+	int						display;
 	int						error;
 }							t_env;
 
@@ -187,6 +190,7 @@ int							server(t_env *env);
 int							clients(t_env *env);
 int							display(t_env *env, int state, int who, char *msg);
 int							message(int type, int fd, char *str);
+int							transfert(char *str, char *dst, char *file);
 int							request(t_client *client, char *cmd);
 int							request_cmd(t_client *client);
 int							request_get(t_client *client);
@@ -194,11 +198,20 @@ int							request_put(t_client *client);
 int							request_cd(t_client *client);
 int							request_pwd(t_client *client);
 int							request_lpwd(t_client *client);
+int							request_lls(t_client *client);
+int							request_lcd(t_client *client);
 int							request_quit(t_client *client);
 int							request_system(t_client *client);
 int							request_access(t_client *c, char *cmd, int access);
+int							request_shutdown(t_client *c);
+int							request_mkdir(t_client *c);
+int							request_rmdir(t_client *c);
+int							request_prompt(t_client *c);
+int							request_display(t_client *c);
+int							request_name(t_client *c);
 int							option_ip(t_server *server, char *str);
 int							option_limit(t_server *server, char *str);
 int							option_name(t_server *server, char *str);
+int							option_display(t_server *server, char *str);
 
 #endif
