@@ -54,7 +54,7 @@ int				display(t_env *env, int state, int who, char *msg)
 	char		*name;
 	char		*format;
 	char		f[128];
-	
+
 	if (env->display == 0)
 		return (SUCCESS);
 	display_state(state, st);

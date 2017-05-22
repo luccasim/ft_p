@@ -12,7 +12,7 @@
 
 #include "serveur.h"
 
-static int		request_fileexist(char *path, char *file)
+static int			request_fileexist(char *path, char *file)
 {
 	DIR				*dir;
 	struct dirent	*dp;
@@ -38,7 +38,7 @@ static int		request_fileexist(char *path, char *file)
 	return (FAIL);
 }
 
-int				request_prompt(t_client *c)
+int					request_prompt(t_client *c)
 {
 	char		res[SIZE];
 
@@ -74,7 +74,7 @@ int					request_quit(t_client *client)
 	exit(SUCCESS);
 }
 
-int				request_put(t_client *c)
+int					request_put(t_client *c)
 {
 	if (request_access(c, "put", ACCESS_USER))
 		return (FAIL);
@@ -91,7 +91,7 @@ int				request_put(t_client *c)
 	return (SUCCESS);
 }
 
-int				request_get(t_client *c)
+int					request_get(t_client *c)
 {
 	if (request_access(c, "get", ACCESS_USER))
 		return (FAIL);

@@ -6,7 +6,7 @@
 /*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/18 17:07:33 by luccasim          #+#    #+#             */
-/*   Updated: 2017/05/18 17:07:35 by luccasim         ###   ########.fr       */
+/*   Updated: 2017/05/22 15:53:55 by luccasim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int			request_chdir(t_client *c, char *f)
 	l = &c->login;
 	ft_strlcpy(c->old, c->pwd, SIZE);
 	if (!f)
-		ft_strlcpy(c->pwd, l->spath, SIZE);	
+		ft_strlcpy(c->pwd, l->spath, SIZE);
 	else
 		ft_snprintf(c->pwd, SIZE, "%s/%s", c->old, f);
 	return (SUCCESS);
@@ -42,7 +42,6 @@ int					request_cd(t_client *c)
 	request_chdir(c, dir);
 	return (SUCCESS);
 }
-
 
 int					request_pwd(t_client *client)
 {

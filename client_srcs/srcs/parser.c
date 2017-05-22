@@ -34,7 +34,6 @@ static int		parser_seek(t_client *c, char *str)
 	i = 0;
 	while (g_options[i].key != 0)
 	{
-		
 		if (ft_strnequ(g_options[i].key, str, ft_strlen(g_options[i].key)))
 		{
 			res = ft_strchr(str, '=');

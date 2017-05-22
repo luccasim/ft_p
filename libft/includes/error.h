@@ -14,7 +14,7 @@
 # define ERROR_H
 
 /*
-** Uses EXIT will check and print if an error was reported. 
+** Uses EXIT will check and print if an error was reported.
 ** Uses THROW(err) will report an error and returns FAIL.
 ** Uses PERROR(msg) will report an error and write directly on stderr.
 ** Uses PUTERROR(msg) will write directly on stderr without report.

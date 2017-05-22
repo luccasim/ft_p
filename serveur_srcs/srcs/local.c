@@ -6,7 +6,7 @@
 /*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/18 17:07:03 by luccasim          #+#    #+#             */
-/*   Updated: 2017/05/18 17:07:06 by luccasim         ###   ########.fr       */
+/*   Updated: 2017/05/22 15:54:21 by luccasim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ int				request_lcd(t_client *client)
 	return (SUCCESS);
 }
 
-int			request_lls(t_client *c)
+int				request_lls(t_client *c)
 {
 	char	new[SIZE];
-	char 	*arg;
+	char	*arg;
 
 	arg = c->request.request;
 	arg++;
@@ -52,7 +52,7 @@ int			request_lls(t_client *c)
 	return (request_system(c));
 }
 
-int			request_lpwd(t_client *c)
+int				request_lpwd(t_client *c)
 {
 	char	m[MSG_SIZE];
 
