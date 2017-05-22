@@ -50,7 +50,7 @@ int				display(t_env *env, int state, int who, char *msg)
 	char		*name;
 	char		*format;
 	char		f[128];
-	
+
 	display_state(state, st);
 	name = (who == SERVER) ? env->server.name : env->client.name;
 	format = "{w:1}[%hk] %-16.15s[{c:1:%d}/{g:1:%d}{w:1}] %s{e}\n";

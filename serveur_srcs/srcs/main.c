@@ -12,7 +12,6 @@
 
 #include "serveur.h"
 
-
 static void		signals_handle(int pid)
 {
 	t_env		*env;
@@ -39,7 +38,7 @@ static int		env_init(t_env *env, char **av)
 	server->sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	server->sin.sin_port = 0;
 	server->date = TIMESTAMP;
-	if (!(server_path = getcwd(0,0)))
+	if (!(server_path = getcwd(0, 0)))
 		return (THROW(PWD));
 	ft_strlcpy(server->name, av[0], SIZE);
 	ft_strlcpy(server->path, server_path, SIZE);

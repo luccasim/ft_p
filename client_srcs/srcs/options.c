@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   options.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/22 15:26:25 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/22 15:26:27 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "client.h"
 
 int				option_access(t_client *c, char *str)
@@ -6,7 +18,7 @@ int				option_access(t_client *c, char *str)
 	t_env	*env;
 
 	nb = ft_atoi(str);
-	if (nb >= 1 && nb <= 3 )
+	if (nb >= 1 && nb <= 3)
 	{
 		env = singleton();
 		env->login.access = nb;
