@@ -87,9 +87,7 @@ static int		request_set(t_client *c, char *cmd)
 	res = cmd;
 	while ((res = ft_strchr(res, '\t')))
 		*res = ' ';
-	ft_asprintf(&res, "%s %s", cmd, c->pwd);
-	r->args = ft_strsplit(res, ' ');
-	ft_strdel(&res);
+	r->args = ft_strsplit(cmd, ' ');
 	if (!r->args)
 		return (FAIL);
 	r->request = cmd;

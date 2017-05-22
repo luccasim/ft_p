@@ -1,0 +1,12 @@
+Result of 'ls' :
+ft_listtotree.c
+ft_treeadd.c
+ft_treedel.c
+ft_treedestroy.c
+ft_treeinfix.c
+ft_treenew.c
+ft_treeprefix.c
+ft_treeput.c
+ft_treeputrev.c
+ft_treesize.c
+ft_treesufix.c
