@@ -19,16 +19,22 @@
 
 int		main(int ac, char **av)
 {
-	int  fd;
-	int  test;
-	struct stat st;
+	char	str[128];
+	char	*path;
 
-	fd = open("toto", O_CREAT | O_RDWR, 0777);
-	write(fd, "Bonjour", 7);
-	fstat(fd, &st);
-	test = open("hello", O_CREAT | O_RDONLY, st.st_mode);
-	PUTNBR(fd);
-	close(fd);
-	close(test);
+	path = getcwd(0, 0);
+	if (path && av[1])
+	{
+		ft_snprintf(str, 128, "%s/%s", path, av[1]);
+		ft_printf("Actual path :%s\n", path);
+		chdir(str);
+		free(path);
+		path = getcwd(0, 0);
+		if (path)
+		{
+			ft_printf("New current directory %s\n", path);
+			free(path);
+		}
+	}
 	return (EXIT);
 }

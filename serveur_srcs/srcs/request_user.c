@@ -61,6 +61,19 @@ int				request_prompt(t_client *c)
 	return (SUCCESS);
 }
 
+int					request_quit(t_client *client)
+{
+	t_env			*env;
+
+	env = singleton();
+	env->nbrclients--;
+	display(env, SUCCESS, CLIENT, "DISCONNECTED!");
+	message(MSG_RESPONSE, 0, "{y:1}Disconnected!{e}\n");
+	message(MSG_RESPONSE, FD_SUCCESS, 0);
+	close(client->sock);
+	exit(SUCCESS);
+}
+
 int				request_put(t_client *c)
 {
 	if (request_access(c, "put", ACCESS_USER))

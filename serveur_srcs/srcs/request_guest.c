@@ -12,45 +12,37 @@
 
 #include "serveur.h"
 
-int					request_cd(t_client *client)
+static int			request_chdir(t_client *c, char *f)
 {
-	DIR				*dir;
-	char			msg[MSG_SIZE];
+	t_login		*l;
 
-	if (ft_strequ("cd", client->request.request))
-	{
-		ft_strlcpy(client->old, client->pwd, SIZE);
-		ft_strlcpy(client->pwd, "", SIZE);
-		return (SUCCESS);
-	}
-	ft_strlcpy(msg, client->request.args[1], MSG_SIZE);
-	if ((dir = opendir(msg)) == 0)
-	{
-		ft_snprintf(msg, MSG_SIZE, "%s is not a directory!", msg);
-		message(MSG_RESPONSE, FD_ERROR, msg);
-		return (FAIL);
-	}
-	ft_strlcpy(client->old, client->pwd, SIZE);
-	if (client->pwd[0] != 0)
-		ft_sprintf(client->pwd, "%s/%s", client->pwd, msg);
+	l = &c->login;
+	ft_strlcpy(c->old, c->pwd, SIZE);
+	if (!f)
+		ft_strlcpy(c->pwd, l->spath, SIZE);	
 	else
-		ft_strlcpy(client->pwd, msg, SIZE);
-	closedir(dir);
+		ft_snprintf(c->pwd, SIZE, "%s/%s", c->old, f);
 	return (SUCCESS);
 }
 
-int					request_quit(t_client *client)
+int					request_cd(t_client *c)
 {
-	t_env			*env;
+	char		*dir;
+	char		tmp[SIZE];
 
-	env = singleton();
-	env->nbrclients--;
-	display(env, SUCCESS, CLIENT, "DISCONNECTED!");
-	message(MSG_RESPONSE, 0, "{y:1}Disconnected!{e}\n");
-	message(MSG_RESPONSE, FD_SUCCESS, 0);
-	close(client->sock);
-	exit(SUCCESS);
+	if (ft_strequ("cd", c->request.request))
+		return (request_chdir(c, 0));
+	dir = c->request.args[1];
+	ft_snprintf(tmp, SIZE, "%s/%s", c->pwd, dir);
+	if (chdir(tmp) == FAIL)
+	{
+		message(MSG_RESPONSE, FD_ERROR, "Can't change directory!");
+		return (FAIL);
+	}
+	request_chdir(c, dir);
+	return (SUCCESS);
 }
+
 
 int					request_pwd(t_client *client)
 {
