@@ -18,7 +18,7 @@ static t_dict_cmd		g_cmds[] =
 	{"lpwd", 0, request_lpwd},
 	{"lls", "/bin/ls", request_lls},
 	{"lcd", 0, request_lcd},
-	{"cmd", 0, request_cmd},
+	{"help", 0, request_cmd},
 	{"get", 0, request_get},
 	{"pwd", 0, request_pwd},
 	{"cd", 0, request_cd},
@@ -53,7 +53,7 @@ int				request_cmd(t_client *c)
 	ft_strcat(msg, tmp);
 	ft_snprintf(tmp, SIZE, u, "get, put, lls, lcd, lpwd, prompt.");
 	ft_strcat(msg, tmp);
-	ft_snprintf(tmp, SIZE, g, "cmd, ls, cd, pwd, quit.");
+	ft_snprintf(tmp, SIZE, g, "help, ls, cd, pwd, quit.");
 	ft_strcat(msg, tmp);
 	message(MSG_RESPONSE, 0, msg);
 	return (SUCCESS);
