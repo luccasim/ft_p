@@ -17,8 +17,8 @@ static int		clients_init(t_client *c)
 	t_env		*env;
 
 	env = singleton();
-	ft_strlcpy(c->pwd, "", SIZE);
-	ft_strlcpy(c->old, "", SIZE);
+	ft_strlcpy(c->pwd, "~", SIZE);
+	ft_strlcpy(c->old, "~", SIZE);
 	c->login.access = ACCESS_GUEST;
 	c->login.mask = 0;
 	ft_sprintf(c->login.name, "Guest %d", env->nbrclients);
@@ -58,13 +58,13 @@ static int		clients_handle(t_client *c)
 {
 	int			ret;
 	char		msg[SIZE + 1];
-	char		prompt[MSG_SIZE];
+	char		p[MSG_SIZE];
 
 	ret = 1;
 	while (ret > 0)
 	{
-		ft_snprintf(prompt, MSG_SIZE, "[%s]%s%s ", c->name, c->pwd, c->prompt);
-		message(MSG_REQUEST, 0, prompt);
+		ft_snprintf(p, MSG_SIZE, "[%s][%s]%s ", c->name, c->pwd, c->prompt);
+		message(MSG_REQUEST, 0, p);
 		ret = recv(c->sock, msg, SIZE, 0);
 		msg[ret - 1] = 0;
 		request(c, msg);

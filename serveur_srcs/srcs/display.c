@@ -34,7 +34,8 @@ int				message(int type, int fd, char *msg)
 			ft_snprintf(message.msg, MSG_SIZE, "{y:1:%s}", message.msg);
 		send(env->client.sock, &message, sizeof(t_message), 0);
 	}
-	return (SUCCESS);
+	fd = (fd == FD_ERROR) ? FAIL : SUCCESS;
+	return (fd);
 }
 
 static int		display_state(int state, char *buf)

@@ -12,47 +12,12 @@
 
 #include "serveur.h"
 
-static int			request_chdir(t_client *c, char *f)
+int					request_pwd(t_client *c)
 {
-	t_login		*l;
+	char			tmp[SIZE];
 
-	l = &c->login;
-	ft_strlcpy(c->old, c->pwd, SIZE);
-	if (!f)
-		ft_strlcpy(c->pwd, l->spath, SIZE);
-	else
-		ft_snprintf(c->pwd, SIZE, "%s/%s", c->old, f);
-	return (SUCCESS);
-}
-
-int					request_cd(t_client *c)
-{
-	char		*dir;
-	char		tmp[SIZE];
-
-	if (ft_strequ("cd", c->request.request))
-		return (request_chdir(c, 0));
-	dir = c->request.args[1];
-	ft_snprintf(tmp, SIZE, "%s/%s", c->pwd, dir);
-	if (chdir(tmp) == FAIL)
-	{
-		message(MSG_RESPONSE, FD_ERROR, "Can't change directory!");
-		return (FAIL);
-	}
-	request_chdir(c, dir);
-	return (SUCCESS);
-}
-
-int					request_pwd(t_client *client)
-{
-	t_env			*env;
-	char			*format;
-	char			msg[MSG_SIZE];
-
-	env = singleton();
-	format = (client->pwd[0] == 0) ? "%s%s\n" : "%s/%s\n";
-	ft_snprintf(msg, MSG_SIZE, format, env->server.path, client->pwd);
-	message(MSG_RESPONSE, 0, msg);
+	ft_snprintf(tmp, SIZE, "%s\n", c->pwd);
+	message(MSG_RESPONSE, 0, tmp);
 	return (SUCCESS);
 }
 
