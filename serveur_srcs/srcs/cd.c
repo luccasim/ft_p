@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luccasim <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/23 15:10:47 by luccasim          #+#    #+#             */
+/*   Updated: 2017/05/23 15:10:49 by luccasim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "serveur.h"
 
 static int			request_cd_chdir(t_client *c, char *f)
@@ -84,7 +96,7 @@ int					request_cd(t_client *c)
 	else
 		request_cd_dir(c, c->request.args[1], tmp);
 	if (chdir(tmp))
-		return (SUCCESS);
-	else
 		return (FAIL);
+	else
+		return (SUCCESS);
 }
